@@ -11,9 +11,10 @@ public class Connection implements Runnable {
     private DataInputStream in;
     private DataOutputStream out;
 
-    public Connection(Socket socket) {
+    public Connection(Socket socket, User user) {
 
         this.socket = socket;
+        this.user   = user;
 
         try {
             InputStream sin = socket.getInputStream();
