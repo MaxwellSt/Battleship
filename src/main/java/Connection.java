@@ -8,7 +8,6 @@ import java.net.Socket;
 public class Connection implements Runnable {
 
     private User user;
-    private Socket socket;
     private ServerSocket server;
     private DataInputStream in;
     private DataOutputStream out;
@@ -19,9 +18,8 @@ public class Connection implements Runnable {
 
     }
 
-    public Connection(Socket socket, User user, ServerSocket server) {
+    public Connection(User user, ServerSocket server) {
 
-        this.socket = socket;
         this.user = user;
         this.server = server;
 
@@ -42,6 +40,7 @@ public class Connection implements Runnable {
 
     public void run() {
 
+        Socket socketB = server.accept();
         try {
             String str = "";
             while (true) {
