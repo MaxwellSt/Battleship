@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
@@ -8,13 +9,21 @@ public class Connection implements Runnable {
 
     private User user;
     private Socket socket;
+    private ServerSocket server;
     private DataInputStream in;
     private DataOutputStream out;
 
-    public Connection(Socket socket, User user) {
+    public static void main(String[] args) {
+        Integer a = 154;
+        Object a1 = a;
+
+    }
+
+    public Connection(Socket socket, User user, ServerSocket server) {
 
         this.socket = socket;
-        this.user   = user;
+        this.user = user;
+        this.server = server;
 
         try {
             InputStream sin = socket.getInputStream();

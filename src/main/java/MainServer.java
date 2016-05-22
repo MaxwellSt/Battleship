@@ -24,7 +24,7 @@ public class MainServer {
                 User user = new User(userId);
                 userList.add(user);
 
-                Connection con = new Connection(socket, user);
+                Connection con = new Connection(socket, user, server);
             }
         } catch (IOException e) {
             e.printStackTrace();
