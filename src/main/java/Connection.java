@@ -7,29 +7,38 @@ import java.net.Socket;
  */
 public class Connection implements Runnable {
 
-    private User user;
+    private User userA;
+    private User userB;
     private ServerSocket server;
-    private DataInputStream in;
-    private DataOutputStream out;
-
-    public static void main(String[] args) {
-        Integer a = 154;
-        Object a1 = a;
-
-    }
+    private DataInputStream inA;
+    private DataOutputStream outA;
+    private DataInputStream inB;
+    private DataOutputStream outB;
 
     public Connection(User user, ServerSocket server) {
 
-        this.user = user;
+        this.userA = user;
         this.server = server;
 
         try {
-            InputStream sin = socket.getInputStream();
-            OutputStream sout = socket.getOutputStream();
+
+            System.out.println("Wait userB");
+
+            Socket socketB = server.accept();
+            userB = new User(0, socketB);
+
+            System.out.println("UserB connected");
+
+            InputStream sinA = userA.getSocket().getInputStream();
+            OutputStream soutA = userA.getSocket().getOutputStream();
+            InputStream sinB = userB.getSocket().getInputStream();
+            OutputStream soutB = userB.getSocket().getOutputStream();
 
             // Конвертируем потоки в другой тип, чтоб легче обрабатывать текстовые сообщения.
-            in = new DataInputStream(sin);
-            out = new DataOutputStream(sout);
+            inA = new DataInputStream(sinA);
+            outA = new DataOutputStream(soutA);
+            inB = new DataInputStream(sinB);
+            outB = new DataOutputStream(soutB);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,17 +49,22 @@ public class Connection implements Runnable {
 
     public void run() {
 
-        Socket socketB = server.accept();
         try {
+
             String str = "";
             while (true) {
 
-                str = in.readUTF();
+                str = MainClient.read(inA);
+                if(str != null){
+                    if (str.equals("exit")) break;
+                    outB.writeUTF("userA: " + str);
+                }
 
-                if (str.equals("exit")) break;
-                System.out.println(str);
-                out.writeUTF("answer from server: " + str);
-
+                str = MainClient.read(inB);
+                if(str != null) {
+                    if (str.equals("exit")) break;
+                    outA.writeUTF("userB: " + str);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

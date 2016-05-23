@@ -33,17 +33,32 @@ public class MainClient {
 
 
             while (true) {
-                line = keyboard.readLine(); // ждем пока пользователь введет что-то и нажмет кнопку Enter.
 
-                out.writeUTF(line); // отсылаем введенную строку текста серверу.
-                out.flush(); // заставляем поток закончить передачу данных.
+                if(keyboard.ready()){
+                    line = keyboard.readLine(); // ждем пока пользователь введет что-то и нажмет кнопку Enter.
+                    out.writeUTF(line); // отсылаем введенную строку текста серверу.
+                    out.flush(); // заставляем поток закончить передачу данных.
+                }
 
-                line = in.readUTF(); // ждем пока сервер отошлет строку текста.
-
-                System.out.println(line);
+                line = read(in);
+                if (line != null){
+                    System.out.println(line);
+                }
             }
         } catch (Exception x) {
             x.printStackTrace();
         }
+    }
+
+    public static synchronized String read(DataInputStream in){
+        try {
+            if(in.available() > 0){
+                return in.readUTF();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
     }
 }

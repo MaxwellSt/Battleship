@@ -21,10 +21,10 @@ public class MainServer {
                 Socket socket = server.accept();
                 userId++;
 
-                User user = new User(userId);
+                User user = new User(userId, socket);
                 userList.add(user);
-
-                Connection con = new Connection(socket, user, server);
+                System.out.println("Create new connection");
+                Connection con = new Connection(user, server);
             }
         } catch (IOException e) {
             e.printStackTrace();
