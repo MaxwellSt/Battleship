@@ -38,9 +38,9 @@ public class MainClient {
 
         try {
 
-            InetAddress ipAddress = InetAddress.getByName(address); // создаем объект который отображает вышеописанный IP-адрес.
+            InetAddress ipAddress = InetAddress.getByName(address);
 
-            Socket socket = new Socket(ipAddress, serverPort); // создаем сокет используя IP-адрес и порт сервера.
+            Socket socket = new Socket(ipAddress, serverPort);
 
             in = socket.getInputStream();
             out = socket.getOutputStream();
@@ -57,6 +57,8 @@ public class MainClient {
 
     public MainClient() {
 
+        ControllerImpl controller = new ControllerImpl();
+
         frame = new JFrame("Chatter");
 
         textField = new JTextField(40);
@@ -70,29 +72,25 @@ public class MainClient {
         frame.add(south, BorderLayout.SOUTH);
 
         JButton button1 = new JButton("Shot");
+        button1.setActionCommand("Shot");
         north.add(button1);
 
-        JButton button2 = new JButton("NewGame");
+        JButton button2 = new JButton("New game");
+        button2.setActionCommand("NewGame");
         north.add(button2);
 
         north.add(textField);
         south.add(new JScrollPane(messageArea), "Center");
 
         textField.setEditable(true);
+        textField.setActionCommand("Message");
 
         frame.pack();
 
         // Add Listeners
-        textField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    new DataOutputStream(out).writeUTF(textField.getText());
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                messageArea.append(textField.getText() + "\n");
-                textField.setText("");
-            }
-        });
+
+        textField.addActionListener(controller);
+        button1.addActionListener(controller);
+        button2.addActionListener(controller);
     }
 }

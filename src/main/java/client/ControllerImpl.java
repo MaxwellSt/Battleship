@@ -2,6 +2,7 @@ package client;
 
 import exceptions.ReciveException;
 import exceptions.SendException;
+import packets.Packets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Created by maxim.stetsenko on 26.05.2016.
+ * Created by maxim.stetsenko.
  */
 public class ControllerImpl implements Controller, ActionListener, KeyListener {
 
@@ -21,44 +22,57 @@ public class ControllerImpl implements Controller, ActionListener, KeyListener {
     private ObjectInputStream in;
 
     public void actionPerformed(ActionEvent e) {
-
+        System.out.println("Run method actionPerformed( " + e.toString() + " )");
+        String eventName = e.getActionCommand();
+        System.out.println("Event name is: " + eventName);
+        if (eventName.equals("Shot")) {
+            System.out.println("The event is \"Shot\"");
+            Packets.Shot shot = new Packets.Shot(10, 10);
+            try {
+                send(shot);
+            } catch (SendException e1) {
+                e1.printStackTrace();
+            }
+        } else if (eventName.equals("NewGame")) {
+            System.out.println("The event is \"NewGame\"");
+        }
     }
 
     public void send(Serializable object) throws SendException {
-        //log.info( "Run method send( " + object.toString() + " )" );
+        System.out.println("Run method send( " + object.toString() + " )");
         try {
             out.writeObject(object);
-            //log.debug( "Object was written, object: " + object.toString() );
+            System.out.println("Object was written, object: " + object.toString());
         } catch (IOException e) {
-            //log.error( e.getMessage(), e );
+            System.out.println(e.getMessage());
             throw new SendException(e.getMessage(), e);
         }
     }
 
     public Object recive() throws ReciveException {
-        //log.info( "Run method recive()" );
+        System.out.println("Run method recive()");
         try {
-            Object object = ( Object ) in.readObject();
-            //log.debug( "Object was read, object: " + object.toString() );
+            Object object = (Object) in.readObject();
+            System.out.println("Object was read, object: " + object.toString());
             return object;
-        } catch ( ClassNotFoundException e ) {
-            //log.error( e.getMessage(), e );
-            throw new ReciveException( e.getMessage(), e );
-        } catch ( IOException e ) {
-            //log.error( e.getMessage(), e );
-            throw new ReciveException( e.getMessage(), e );
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            throw new ReciveException(e.getMessage(), e);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new ReciveException(e.getMessage(), e);
         }
     }
 
     public void keyTyped(KeyEvent e) {
-
+        System.out.println("Run method keyTyped()");
     }
 
     public void keyPressed(KeyEvent e) {
-
+        System.out.println("Run method keyPressed()");
     }
 
     public void keyReleased(KeyEvent e) {
-
+        System.out.println("Run method keyReleased()");
     }
 }
