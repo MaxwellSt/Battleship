@@ -54,14 +54,14 @@ public class Connection implements Runnable {
             String str = "";
             while (true) {
 
-                str = MainClient.read(inA);
-                if(str != null){
+                if(inA.available() > 0){
+                    str = inA.readUTF();
                     if (str.equals("exit")) break;
                     outB.writeUTF("userA: " + str);
                 }
 
-                str = MainClient.read(inB);
-                if(str != null) {
+                if(inB.available() > 0) {
+                    str = inB.readUTF();
                     if (str.equals("exit")) break;
                     outA.writeUTF("userB: " + str);
                 }
