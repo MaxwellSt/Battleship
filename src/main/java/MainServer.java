@@ -18,8 +18,8 @@ public class MainServer {
             server = new ServerSocket(2000);
 
             while (true) {
+
                 Socket socket = server.accept();
-                userId++;
 
                 User user = new User(userId, socket);
                 userList.add(user);
